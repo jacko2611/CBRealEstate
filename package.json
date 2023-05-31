@@ -1,0 +1,21 @@
+{
+  "name": "cbrealestate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@finsweet/attributes-cmscore": "^1.13.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "fetch": "^1.1.0",
+    "node": "^20.1.0",
+    "typescript": "^5.0.4"
+  }
+}
