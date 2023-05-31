@@ -21,6 +21,8 @@ app.get('/properties', async (req, res) => {
         "X-Api-Key": apiKey
       }
     });
+    console.log({ apiKey, apiToken });
+    
 
     const data = await response.json();
     res.json(data);
