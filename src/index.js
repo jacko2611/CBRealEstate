@@ -8,7 +8,7 @@ import { CMSList } from '../../types/CMSList';
 const apiKey = "HTNVNFzeSt8BhVCHYqzqs2KmbSA8f9Ek21sQ5i5n";
 const apiToken = "xacvbqkccanqijifwdninqwrmkfhktjucrabfayw";
 
-fetch("https://ap-southeast-2.api.vaultre.com.au/api/v1.2/properties", {
+fetch("https://realestateserver-fuhd.onrender.com/properties", {
   headers: {
     "Authorization": `Bearer ${apiToken}`,
     "X-Api-Key": apiKey

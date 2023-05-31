@@ -7,88 +7,115 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-
-window.fsAttributes = window.fsAttributes || [];
-window.fsAttributes.push([
-    'cmsload',
-    (listInstances) => {
-        console.log('cmsload Successfully loaded!');
+const fetchProperties = async () => {
+    try {
+      const response = await fetch("https://realestateserver-fuhd.onrender.com/properties");
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log('Error fetching properties');
+      return [];
     }
-]);
-window.fsAttributes.push({
-    'cmsfilter': (filtersInstances) => __awaiter(void 0, void 0, void 0, function* () {
-        const [filtersInstance] = filtersInstances;
-        const { listInstance } = filtersInstance;
-        const [firstItem] = listInstance.items;
-        const itemTemplateElement = firstItem.element;
-        const properties = yield fetchProperties();
+  };
+  
+  window.fsAttributes = window.fsAttributes || [];
+  
+  window.fsAttributes.push({
+    'cmsload': (listInstances) => {
+      console.log('cmsload Successfully loaded!');
+      console.log('cmsfilter Successfully loaded!');
+      const [filtersInstance] = listInstances;
+      const { listInstance } = filtersInstance;
+      const [firstItem] = listInstance.items;
+      const itemTemplateElement = firstItem.element;
+      fetchProperties().then(properties => {
+        console.log({ properties });
         listInstance.clearItems();
         const newProperties = properties.map((property) => createProperty(property, itemTemplateElement));
-        yield listInstance.addItems(newProperties);
+        listInstance.addItems(newProperties);
         const filterTemplateElement = filtersInstance.form.querySelector('[data-element="filter"]');
-        if (!filterTemplateElement)
-            return;
+        if (!filterTemplateElement) {
+          console.log('filterTemplateElement not found');
+          return;
+        }
         const filtersWrapper = filterTemplateElement.parentElement;
         if (!filtersWrapper)
-            return;
+          return;
         const categories = collectCategories(properties);
         for (const category of categories) {
-            const newFilter = createFilter(category, filterTemplateElement);
-            if (!newFilter)
-                continue;
-            filtersWrapper.append(newFilter);
+          const newFilter = createFilter(category, filterTemplateElement);
+          if (!newFilter)
+            continue;
+          filtersWrapper.append(newFilter);
         }
         filtersInstance.storeFiltersData();
-    }),
-});
-
-// function fetchProperties() {
-//     return __awaiter(this, void 0, void 0, function* () {
-//       try {
-//         var response = yield fetch('https://ap-southeast-2.api.vaultre.com.au/api/v1.3/properties', {
-//           headers: {
-//             "Authorization": "Bearer " + apiToken,
-//             "X-Api-Key": apiKey
-//           }
-//         });
-//         var data = yield response.json();
-//         return data;
-//       } catch (error) {
-//         console.log('Error fetching properties', error);
-//         return [];
-//       }
-//     });
-//   }
+      });
+    },
+    'cmsfilter': (filtersInstances) => {
+      console.log('cmsfilter Successfully loaded!');
+      const [filtersInstance] = filtersInstances;
+      const { listInstance } = filtersInstance;
+      const itemTemplateElement = listInstance.items?.[0]?.element;
+      if (!itemTemplateElement) {
+        console.log('Item template element not found');
+        return;
+      }
+      fetchProperties().then(properties => {
+        console.log({ properties });
+        listInstance.clearItems();
+        const newProperties = properties.map((property) => createProperty(property, itemTemplateElement));
+        listInstance.addItems(newProperties);
+        const filterTemplateElement = filtersInstance.form.querySelector('[data-element="filter"]');
+        if (!filterTemplateElement) {
+          console.log('filterTemplateElement not found');
+          return;
+        }
+        const filtersWrapper = filterTemplateElement.parentElement;
+        if (!filtersWrapper)
+          return;
+        const categories = collectCategories(properties);
+        for (const category of categories) {
+          const newFilter = createFilter(category, filterTemplateElement);
+          if (!newFilter)
+            continue;
+          filtersWrapper.append(newFilter);
+        }
+        filtersInstance.storeFiltersData();
+      });
+    }
+  });
   
-const createProperty = (property, templateElement) => {
+  const createProperty = (property, templateElement) => {
     const newItem = templateElement.cloneNode(true);
     newItem.removeAttribute('hidden');
     const titleElement = newItem.querySelector('[data-element="address"]');
     if (titleElement)
-        titleElement.textContent = property.displayAddress;
+      titleElement.textContent = property.displayAddress;
     const priceElement = newItem.querySelector('[data-element="price"]');
     if (priceElement)
-        priceElement.textContent = property.salePrice;
+      priceElement.textContent = property.salePrice;
     const imageElement = newItem.querySelector('[data-element="image"]');
     if (imageElement)
-        imageElement.src = property.photos[0];
+      imageElement.src = property.photos[0];
     return newItem;
-};
-const collectCategories = (properties) => {
+  };
+  
+  const collectCategories = (properties) => {
     const categories = new Set();
     for (const { category } of properties) {
-        categories.add(category);
+      categories.add(category);
     }
     return [...categories];
-};
-const createFilter = (category, templateElement) => {
+  };
+  
+  const createFilter = (category, templateElement) => {
     const newFilter = templateElement.cloneNode(true);
     const label = newFilter.querySelector('[data-element="label"]');
     const radio = newFilter.querySelector('[data-element="radio"]');
     if (!label || !radio)
-        return;
+      return;
     label.textContent = category;
     radio.value = category;
     return newFilter;
-};
-export {};
+  };
+  
