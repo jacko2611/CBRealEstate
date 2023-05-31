@@ -37,7 +37,7 @@ app.get('/properties', async (req, res) => {
 });
 
 
-app.get('/properties/id', async (req, res) => {
+app.get('/properties/residential/sale/id', async (req, res) => {
 
   try {
     const response = await fetch(initialEndpoint, {
@@ -47,7 +47,7 @@ app.get('/properties/id', async (req, res) => {
       }
       .then(response => response.json())
       .then(data => {
-        const propertyIds = data.properties;
+        const propertyIds = data.id;
 
         const propertyDataPromises = propertyIds.map(propertyId => {
           const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/sale/${propertyId}`;
