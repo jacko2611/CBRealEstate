@@ -50,7 +50,7 @@ app.get('/properties/id', async (req, res) => {
         const propertyIds = data.properties;
 
         const propertyDataPromises = propertyIds.map(propertyId => {
-          const propertyEndpoint = `${baseUrl}/v1.2/properties/sale/residential${propertyId}`;
+          const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/sale/${propertyId}`;
           return fetch(propertyEndpoint)
             .then(response => response.json())  
         })
