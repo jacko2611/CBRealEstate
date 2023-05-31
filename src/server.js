@@ -1,8 +1,14 @@
+import dotenv from 'dotenv';
+
 const express = require('express');
 const cors = require('cors');
 // const fetch = require('node-fetch');
+dotenv.config();
 
 const app = express();
+
+const apiToken = process.env.API_TOKEN;
+const apiKey = process.env.API_KEY;
 
 app.use(cors());
 

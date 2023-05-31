@@ -7,15 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-// dotenv.config();
-
-fetch("https://ap-southeast-2.api.vaultre.com.au/api/v1.3/properties", {
-  method: "GET",
-  headers: {
-    "Authorization": `Bearer ${apiToken}`,
-    "X-Api-Key": apiKey
-  }
-})
 
 window.fsAttributes = window.fsAttributes || [];
 window.fsAttributes.push([
@@ -51,23 +42,23 @@ window.fsAttributes.push({
     }),
 });
 
-function fetchProperties() {
-    return __awaiter(this, void 0, void 0, function* () {
-      try {
-        var response = yield fetch('https://ap-southeast-2.api.vaultre.com.au/api/v1.3/properties', {
-          headers: {
-            "Authorization": "Bearer " + apiToken,
-            "X-Api-Key": apiKey
-          }
-        });
-        var data = yield response.json();
-        return data;
-      } catch (error) {
-        console.log('Error fetching properties', error);
-        return [];
-      }
-    });
-  }
+// function fetchProperties() {
+//     return __awaiter(this, void 0, void 0, function* () {
+//       try {
+//         var response = yield fetch('https://ap-southeast-2.api.vaultre.com.au/api/v1.3/properties', {
+//           headers: {
+//             "Authorization": "Bearer " + apiToken,
+//             "X-Api-Key": apiKey
+//           }
+//         });
+//         var data = yield response.json();
+//         return data;
+//       } catch (error) {
+//         console.log('Error fetching properties', error);
+//         return [];
+//       }
+//     });
+//   }
   
 const createProperty = (property, templateElement) => {
     const newItem = templateElement.cloneNode(true);
