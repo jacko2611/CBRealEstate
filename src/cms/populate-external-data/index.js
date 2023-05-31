@@ -8,8 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 // dotenv.config();
-const apiToken = "xacvbqkccanqijifwdninqwrmkfhktjucrabfayw";
-const apiKey = "HTNVNFzeSt8BhVCHYqzqs2KmbSA8f9Ek21sQ5i5n";
 
 fetch("https://ap-southeast-2.api.vaultre.com.au/api/v1.3/properties", {
   method: "GET",
