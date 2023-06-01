@@ -50,7 +50,7 @@ app.get('/properties/residential/sale', async (req, res) => {
   }
 });
 
-// Fetch properties for rent
+// Fetch properties for lease
 app.get('/properties/residential/lease', async (req, res) => {
   try {
     const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/lease`;
@@ -80,10 +80,28 @@ app.get('/properties/residential/sale/:id', async (req, res) => {
         "X-Api-Key": apiKey
       }
     });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while fetching the property details." });
+  }
+});
 
-    const propertyInfo = await response.json();
-    // Process propertyInfo and send the necessary data in the response
-    res.json(propertyInfo);
+// Fetch properties for lease by id
+app.get('/properties/residential/lease/:id', async (req, res) => {
+  try {
+    const propertyId = req.params.id;
+    const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/lease/${propertyId}`;
+
+    const response = await fetch(propertyEndpoint, {
+      headers: {
+        "Authorization": `Bearer ${apiToken}`,
+        "X-Api-Key": apiKey
+      }
+    });
+
+const propertyInfo = await response.json();
+  // Process propertyInfo and send the necessary data in the response
+  res.json(propertyInfo);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred while fetching the property details." });
