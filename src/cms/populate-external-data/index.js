@@ -62,8 +62,12 @@ const fetchAllProperties = async () => {
     const priceElement = newItem.querySelector('[data-element="price"]');
     if (priceElement)
       priceElement.textContent = property.salePrice;
-  
-    // Handle photos
+    const bedElement = newItem.querySelector('[data-element="bed"]');
+    if (bedElement)
+      bedElement.textContent = property.bed;
+    const bathElement = newItem.querySelector('[data-element="bath"]');
+    if (bathElement)
+      bathElement.textContent = property.bath;
     const imageElement = newItem.querySelector('[data-element="image"]');
     if (imageElement) {
       const primaryPhoto = property.photos.find((photo) => photo.isPrimary);
@@ -72,9 +76,9 @@ const fetchAllProperties = async () => {
         imageElement.alt = primaryPhoto.description;
       }
     }
-  
     return newItem;
   };
+  
   
   // Example usage
   const listInstance = document.querySelector('[data-instance="list"]');
