@@ -28,8 +28,10 @@ const fetchAllProperties = async () => {
     });
     const data = await response.json();
 
-    // Build the index
-    propertyIndex = buildPropertyIndex(data);
+    // Build the index if data is an array
+    if (Array.isArray(data)) {
+      propertyIndex = buildPropertyIndex(data);
+    }
 
     return data;
   } catch (error) {
