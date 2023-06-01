@@ -15,7 +15,7 @@ const fetchAllProperties = async () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.log('Error fetching properties');
+      console.log('Error fetching sale properties');
       return [];
     }
   };
@@ -26,77 +26,69 @@ const fetchAllProperties = async () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.log('Error fetching properties');
-      return [];
+      console.log('Error fetching the sale property');
+      return null;
     }
   };
   
-  const fetchLeaseProperties = async () => {
+  const createProperty = async () => {
+    const templateElement = document.getElementById('card-container');
+    const propertyId = 19218806;
+  
     try {
-      const response = await fetch("https://realestateserver-fuhd.onrender.com/properties/residential/lease");
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log('Error fetching properties');
-      return [];
-    }
-  };
-  
-  const fetchLeasePropertiesById = async (id) => {
-    try {
-      const response = await fetch(`https://realestateserver-fuhd.onrender.com/properties/residential/lease/${id}`);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log('Error fetching properties');
-      return [];
-    }
-  };
-  
-  const createProperty = (property, templateElement) => {
-    const newItem = templateElement.cloneNode(true);
-    newItem.removeAttribute('hidden');
-    
-    // Set property data
-    const titleElement = newItem.querySelector('[data-element="address"]');
-    if (titleElement) {
-      titleElement.textContent = property.displayAddress;
-    }
-    
-    const priceElement = newItem.querySelector('[data-element="price"]');
-    if (priceElement) {
-      priceElement.textContent = property.salePrice;
-    }
-    
-    const bedElement = newItem.querySelector('[data-element="bed"]');
-    if (bedElement) {
-      bedElement.textContent = property.bed;
-    }
-    
-    const bathElement = newItem.querySelector('[data-element="bath"]');
-    if (bathElement) {
-      bathElement.textContent = property.bath;
-    }
-    
-    const imageElement = newItem.querySelector('[data-element="image"]');
-    if (imageElement) {
-      const primaryPhoto = property.photos.find((photo) => photo.isPrimary);
-      if (primaryPhoto) {
-        imageElement.src = primaryPhoto.url;
-        imageElement.alt = primaryPhoto.description;
+      const property = await fetchSalePropertiesById(propertyId);
+      if (!property) {
+        console.log('Property not found');
+        return;
       }
-    }
   
-    // Add event listener to show description
-    newItem.addEventListener('click', () => {
-      const descriptionElement = newItem.querySelector('[data-element="description"]');
-      if (descriptionElement) {
-        descriptionElement.textContent = property.description;
+      const newItem = templateElement.cloneNode(true);
+      newItem.removeAttribute('hidden');
+  
+      // Set property data
+      const titleElement = document.getElementById('address');
+      if (titleElement) {
+        titleElement.textContent = property.displayAddress;
       }
-    });
   
-    return newItem;
+      const priceElement = document.getElementById('price');
+      if (priceElement) {
+        priceElement.textContent = property.salePrice;
+      }
+  
+      const bedElement = document.getElementById('bedroom');
+      if (bedElement) {
+        bedElement.textContent = property.bed;
+      }
+  
+      const bathElement = document.getElementById('bathroom');
+      if (bathElement) {
+        bathElement.textContent = property.bath;
+      }
+  
+      const imageElement = document.getElementById('image');
+      if (imageElement) {
+        const primaryPhoto = property.photos.find((photo) => photo.isPrimary);
+        if (primaryPhoto) {
+          imageElement.src = primaryPhoto.url;
+          imageElement.alt = primaryPhoto.description;
+        }
+      }
+  
+      // Add event listener to show description
+      newItem.addEventListener('click', () => {
+        const descriptionElement = newItem.querySelector('#description');
+        if (descriptionElement) {
+          descriptionElement.textContent = property.description;
+        }
+      });
+  
+      // Replace the existing listing-preview element with the new item
+      templateElement.replaceWith(newItem);
+    } catch (error) {
+      console.log('Error creating property:', error);
+    }
   };
   
- 
+  createProperty();
   

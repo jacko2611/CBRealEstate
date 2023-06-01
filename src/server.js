@@ -65,9 +65,9 @@ app.get('/properties', async (req, res) => {
 });
 
 // Fetch properties for sale
-app.get('/properties/residential/sale', async (req, res) => {
+app.get('/properties/residential/sale/available', async (req, res) => {
   try {
-    const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/sale`;
+    const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/sale/available`;
     const response = await fetch(propertyEndpoint, {
       headers: {
         "Authorization": `Bearer ${apiToken}`,
@@ -83,9 +83,9 @@ app.get('/properties/residential/sale', async (req, res) => {
 });
 
 // Fetch properties for lease
-app.get('/properties/residential/lease', async (req, res) => {
+app.get('/properties/residential/lease/available', async (req, res) => {
   try {
-    const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/lease`;
+    const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/lease/available`;
     const response = await fetch(propertyEndpoint, {
       headers: {
         "Authorization": `Bearer ${apiToken}`,
