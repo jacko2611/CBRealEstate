@@ -1,19 +1,8 @@
-const fetchAllProperties = async () => {
-    try {
-      const response = await fetch("https://realestateserver-fuhd.onrender.com/properties");
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log('Error fetching properties');
-      return [];
-    }
-  };
-  
-  const fetchSaleProperties = async () => {
+const fetchSaleProperties = async () => {
     try {
       const response = await fetch("https://realestateserver-fuhd.onrender.com/properties/residential/sale");
       const data = await response.json();
-      return data;
+      return data.items; 
     } catch (error) {
       console.log('Error fetching sale properties');
       return [];
@@ -31,64 +20,78 @@ const fetchAllProperties = async () => {
     }
   };
   
-  const createProperty = async () => {
-    const templateElement = document.getElementById('card-container');
-    const propertyId = 19218806;
-  
+  const createPropertyCards = async () => {
     try {
-      const property = await fetchSalePropertiesById(propertyId);
-      if (!property) {
-        console.log('Property not found');
+      const properties = await fetchSaleProperties();
+  
+      if (!Array.isArray(properties)) {
+        console.log('Invalid response format');
         return;
       }
   
-      const newItem = templateElement.cloneNode(true);
-      newItem.removeAttribute('hidden');
+      const templateElement = document.getElementById('card-container');
+      const containerElement = templateElement.parentElement;
   
-      // Set property data
-      const titleElement = document.getElementById('address');
-      if (titleElement) {
-        titleElement.textContent = property.displayAddress;
-      }
+      for (const property of properties) {
+        try {
+          const propertyData = await fetchSalePropertiesById(property.id);
   
-      const priceElement = document.getElementById('price');
-      if (priceElement) {
-        priceElement.textContent = property.salePrice;
-      }
+          if (!propertyData) {
+            console.log(`Property with ID ${property.id} not found`);
+            continue;
+          }
   
-      const bedElement = document.getElementById('bedroom');
-      if (bedElement) {
-        bedElement.textContent = property.bed;
-      }
+          const newItem = templateElement.cloneNode(true);
+          newItem.removeAttribute('hidden');
   
-      const bathElement = document.getElementById('bathroom');
-      if (bathElement) {
-        bathElement.textContent = property.bath;
-      }
+        
+          const titleElement = newItem.querySelector('#address');
+          if (titleElement) {
+            titleElement.textContent = propertyData.displayAddress;
+          }
   
-      const imageElement = document.getElementById('image');
-      if (imageElement) {
-        const primaryPhoto = property.photos.find((photo) => photo.isPrimary);
-        if (primaryPhoto) {
-          imageElement.src = primaryPhoto.url;
-          imageElement.alt = primaryPhoto.description;
+          const priceElement = newItem.querySelector('#price');
+          if (priceElement) {
+            priceElement.textContent = propertyData.salePrice;
+          }
+  
+          const bedElement = newItem.querySelector('#bedroom');
+          if (bedElement) {
+            bedElement.textContent = propertyData.bed;
+          }
+  
+          const bathElement = newItem.querySelector('#bathroom');
+          if (bathElement) {
+            bathElement.textContent = propertyData.bath;
+          }
+  
+          const imageElement = newItem.querySelector('#image');
+          if (imageElement) {
+            const primaryPhoto = propertyData.photos.find((photo) => photo.isPrimary);
+            if (primaryPhoto) {
+              imageElement.src = primaryPhoto.url;
+              imageElement.alt = primaryPhoto.description;
+            }
+          }
+  
+          
+          newItem.addEventListener('click', () => {
+            const descriptionElement = newItem.querySelector('#description');
+            if (descriptionElement) {
+              descriptionElement.textContent = propertyData.description;
+            }
+          });
+  
+         
+          containerElement.appendChild(newItem);
+        } catch (error) {
+          console.log(`Error creating property card for ID ${property.id}:`, error);
         }
       }
-  
-      // Add event listener to show description
-      newItem.addEventListener('click', () => {
-        const descriptionElement = newItem.querySelector('#description');
-        if (descriptionElement) {
-          descriptionElement.textContent = property.description;
-        }
-      });
-  
-      // Replace the existing listing-preview element with the new item
-      templateElement.replaceWith(newItem);
     } catch (error) {
-      console.log('Error creating property:', error);
+      console.log('Error creating property cards:', error);
     }
   };
   
-  createProperty();
+  createPropertyCards();
   

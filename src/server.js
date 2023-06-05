@@ -39,7 +39,6 @@ const fetchAllProperties = async () => {
     return [];
   }
 };
-
 // Helper function to build the property index
 const buildPropertyIndex = (data) => {
   const index = {};
@@ -93,6 +92,42 @@ app.get('/properties/residential/lease', async (req, res) => {
       }
     });
     const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while fetching the properties." });
+  }
+});
+
+// Fetch available sale properties
+app.get('/properties/residential/sale/available', async (req, res) => {
+  try {
+    const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/sale/available`;
+    const response = await fetch(propertyEndpoint, {
+      headers: {
+        "Authorization": `Bearer ${apiToken}`,
+        "X-Api-Key": apiKey
+      }
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while fetching the properties." });
+  }
+});
+
+// Fetch available lease properties
+app.get('/properties/residential/lease/available', async (req, res) => {
+  try {
+    const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/lease/available`;
+    const reponse = await fetch(propertyEndpoint, {
+      headers: {
+        "Authorization": `Bearer ${apiToken}`,
+        "X-Api-Key": apiKey
+      }
+    });
+    const data = await reponse.json();
     res.json(data);
   } catch (error) {
     console.error(error);
