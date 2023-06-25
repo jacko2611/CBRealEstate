@@ -135,6 +135,43 @@ app.get('/properties/residential/lease/available', async (req, res) => {
   }
 });
 
+// Fetch available properties for sale `published on portals`
+app.get('/properties/residential/sale?publishedOnPortals=41591', async (req, res) => {
+  try {
+    const propertyEndpoint =  `${baseUrl}/v1.3/properties/residential/sale?publishedOnPortals=41591`;
+    const response = await fetch(propertyEndpoint, {
+      headers: {
+        "Authorization": `Bearer ${apiToken}`,
+        "X-Api-Key": apiKey
+      }
+    });
+    const data = await response.json();
+    res.json(data);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "An error occurred while fetching the properties." });
+    }
+});
+
+// Fetch available properties for lease `published on portals`
+app.get('/properties/residential/lease?publishedOnPortals=41591', async (req, res) => {
+  try {
+    const propertyEndpoint = `${baseUrl}/v1.3/properties/residential/lease?publishedOnPortals=41591`;
+    const response = await fetch(propertyEndpoint, {
+      headers: {
+        "Authorization": `Bearer ${apiToken}`,
+        "X-Api-Key": apiKey
+      }
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while fetching the properties." });
+  }
+});
+
+
 
 // Fetch properties for sale by ID
 app.get('/properties/residential/sale/:id', async (req, res) => {
@@ -177,6 +214,7 @@ app.get('/properties/residential/lease/:id', async (req, res) => {
     res.status(500).json({ message: "An error occurred while fetching the property details." });
   }
 });
+
 
 const port = 3000;
 app.listen(port, () => {
