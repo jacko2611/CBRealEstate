@@ -25,6 +25,7 @@ const fetchSaleProperties = async () => {
         try {
           const newItem = templateElement.cloneNode(true);
           newItem.removeAttribute('hidden');
+          newItem.style.display = 'block'; // Show the cloned element
   
           const titleElement = newItem.querySelector('#address');
           if (titleElement) {
@@ -70,13 +71,16 @@ const fetchSaleProperties = async () => {
           console.log(`Error creating property card:`, error);
         }
       }
+  
+      templateElement.style.display = 'none'; // Hide the template element after cloning
     } catch (error) {
       console.log('Error creating property cards:', error);
     }
   };
   
-  // Call the functions in the correct order
+  
   (async () => {
     await fetchSaleProperties();
     displayPropertyDetails();
   })();
+  
