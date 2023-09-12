@@ -115,7 +115,7 @@ app.get('/properties/residential/sale/available', async (req, res) => {
       const filteredData = data.map(property => ({
         photos: property.photos.map(photo => photo.url),
         id: property.id,
-        displayAddress: `${property.address.suburb.name}, ${property.address.state.abbreviation}`,
+        displayAddress: property.address ? `${property.address.streetNumber} ${property.address.street}, ${property.address.suburb.name} ${property.address.state.abbreviation} ${property.address.postcode}` : "",
         bedrooms: property.bed,
         bathrooms: property.bath,
         description: property.description
@@ -132,7 +132,6 @@ app.get('/properties/residential/sale/available', async (req, res) => {
   }
 });
 
-
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
   try {
@@ -144,12 +143,13 @@ app.get('/properties/residential/lease/available', async (req, res) => {
       }
     });
     const data = await reponse.json();
+
     if (Array.isArray(data)) {
       // Filter and create a new object with only the desired properties
       const filteredData = data.map(property => ({
         photos: property.photos.map(photo => photo.url),
         id: property.id,
-        displayAddress: `${property.address.suburb.name}, ${property.address.state.abbreviation}`,
+        displayAddress: property.address ? `${property.address.streetNumber} ${property.address.street}, ${property.address.suburb.name} ${property.address.state.abbreviation} ${property.address.postcode}` : "",
         bedrooms: property.bed,
         bathrooms: property.bath,
         description: property.description
