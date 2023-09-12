@@ -110,12 +110,29 @@ app.get('/properties/residential/sale/available', async (req, res) => {
       }
     });
     const data = await response.json();
-    res.json(data);
+
+    if (Array.isArray(data)) {
+      // Filter the JSON response to include only the desired properties
+      const filteredData = data.map(property => ({
+        photos: property.photos,
+        id: property.tenureOrTitleType.id,
+        displayAddress: property.address ? `${property.address.streetNumber} ${property.address.street}, ${property.address.suburb.name} ${property.address.state.abbreviation} ${property.address.postcode}` : "",
+        bedrooms: property.bed,
+        bathrooms: property.bath,
+        description: property.description
+      }));
+
+      res.json(filteredData);
+    } else {
+      console.error("Unexpected data format from API:", data);
+      res.status(500).json({ message: "An error occurred while fetching the properties." });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred while fetching the properties." });
   }
 });
+
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
