@@ -121,7 +121,7 @@ app.get('/properties/residential/sale/available', async (req, res) => {
 
     // Filter the data to include only the required fields
     const filteredData = {
-      displayAddress: data.address.streetNumber + ' ' + data.address.street + ', ' + data.address.suburb.name + ' ' + data.address.state.abbreviation,
+      displayAddress: data.displayAddress,
       photos: data.photos.map(photo => photo.url),
       bedrooms: data.bed,
       bathrooms: data.bath,
