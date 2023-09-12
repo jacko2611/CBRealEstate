@@ -112,6 +112,9 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     });
     const data = await response.json();
 
+    // Log the API response for inspection
+    console.log("API Response:", data);
+
     if (Array.isArray(data)) {
       // Filter the JSON response to include only the desired properties
       const filteredData = data.map(property => ({
@@ -133,8 +136,6 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     res.status(500).json({ message: "An error occurred while fetching or processing the properties data." });
   }
 });
-
-
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
