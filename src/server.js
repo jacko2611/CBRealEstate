@@ -110,32 +110,14 @@ app.get('/properties/residential/sale/available', async (req, res) => {
         "X-Api-Key": apiKey
       }
     });
-    const data = await response.json();
-
-    // Log the API response for inspection
-    console.log("API Response:", data);
-
-    if (Array.isArray(data)) {
-      // Filter the JSON response to include only the desired properties
-      const filteredData = data.map(property => ({
-        photos: property.photos,
-        id: property.tenureOrTitleType.id,
-        displayAddress: property.address ? `${property.address.streetNumber} ${property.address.street}, ${property.address.suburb.name} ${property.address.state.abbreviation} ${property.address.postcode}` : "",
-        bedrooms: property.bed,
-        bathrooms: property.bath,
-        description: property.description
-      }));
-
-      res.json(filteredData);
-    } else {
-      console.error("Unexpected data format from API:", data);
-      res.status(500).json({ message: "An error occurred while processing the properties data." });
-    }
+    const data = await reponse.json();
+    res.json(data);
   } catch (error) {
-    console.error("Error fetching or processing data:", error);
-    res.status(500).json({ message: "An error occurred while fetching or processing the properties data." });
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while fetching the properties." });
   }
 });
+
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
