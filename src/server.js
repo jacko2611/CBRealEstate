@@ -110,7 +110,15 @@ app.get('/properties/residential/sale/available', async (req, res) => {
       }
     });
     const data = await response.json();
-    res.json(data);
+
+    // Filter and create a new object with only the desired properties
+    const filteredData = data.map(property => ({
+      description: property.description,
+      photos: property.photos,
+      address: property.address
+    }));
+
+    res.json(filteredData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred while fetching the properties." });
@@ -121,19 +129,28 @@ app.get('/properties/residential/sale/available', async (req, res) => {
 app.get('/properties/residential/lease/available', async (req, res) => {
   try {
     const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/lease/available`;
-    const reponse = await fetch(propertyEndpoint, {
+    const response = await fetch(propertyEndpoint, {
       headers: {
         "Authorization": `Bearer ${apiToken}`,
         "X-Api-Key": apiKey
       }
     });
-    const data = await reponse.json();
-    res.json(data);
+    const data = await response.json();
+
+    // Filter and create a new object with only the desired properties
+    const filteredData = data.map(property => ({
+      description: property.description,
+      photos: property.photos,
+      address: property.address
+    }));
+
+    res.json(filteredData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred while fetching the properties." });
   }
 });
+
 
 // Fetch available sale properties by id
 app.get('/properties/residential/sale/available/:id', async (req, res) => {
