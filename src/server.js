@@ -110,8 +110,24 @@ app.get('/properties/residential/sale/available', async (req, res) => {
         "X-Api-Key": apiKey
       }
     });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.status} - ${response.statusText}`);
+    }
+
     const data = await response.json();
-    res.json(data);
+
+    // Filter the data to include only the required fields
+    const filteredData = {
+      displayAddress: data.address.streetNumber + ' ' + data.address.street + ', ' + data.address.suburb.name + ' ' + data.address.state.abbreviation,
+      photos: data.photos.map(photo => photo.url),
+      bedrooms: data.bed,
+      bathrooms: data.bath,
+      propertyId: data.id,
+      description: data.description
+    };
+
+    res.json(filteredData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred while fetching the properties." });
