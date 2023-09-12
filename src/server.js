@@ -110,7 +110,7 @@ app.get('/properties/residential/sale/available', async (req, res) => {
         "X-Api-Key": apiKey
       }
     });
-    const data = await reponse.json();
+    const data = await response.json();
     res.json(data);
   } catch (error) {
     console.error(error);
