@@ -110,12 +110,28 @@ app.get('/properties/residential/sale/available', async (req, res) => {
       }
     });
     const data = await response.json();
-    res.json(data);
+    if (Array.isArray(data)) {
+      // Filter and create a new object with only the desired properties
+      const filteredData = data.map(property => ({
+        photos: property.photos.map(photo => photo.url),
+        id: property.id,
+        displayAddress: `${property.address.suburb.name}, ${property.address.state.abbreviation}`,
+        bedrooms: property.bed,
+        bathrooms: property.bath,
+        description: property.description
+      }));
+
+      res.json(filteredData);
+    } else {
+      console.error("Unexpected data format from API:", data);
+      res.status(500).json({ message: "An error occurred while fetching the properties." });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred while fetching the properties." });
   }
 });
+
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
@@ -128,7 +144,22 @@ app.get('/properties/residential/lease/available', async (req, res) => {
       }
     });
     const data = await reponse.json();
-    res.json(data);
+    if (Array.isArray(data)) {
+      // Filter and create a new object with only the desired properties
+      const filteredData = data.map(property => ({
+        photos: property.photos.map(photo => photo.url),
+        id: property.id,
+        displayAddress: `${property.address.suburb.name}, ${property.address.state.abbreviation}`,
+        bedrooms: property.bed,
+        bathrooms: property.bath,
+        description: property.description
+      }));
+
+      res.json(filteredData);
+    } else {
+      console.error("Unexpected data format from API:", data);
+      res.status(500).json({ message: "An error occurred while fetching the properties." });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred while fetching the properties." });
