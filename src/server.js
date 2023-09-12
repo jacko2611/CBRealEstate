@@ -112,7 +112,9 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch data: ${response.status} - ${response.statusText}`);
+      const errorText = await response.text();
+      console.error(`API request failed with status ${response.status}: ${errorText}`);
+      throw new Error(`Failed to fetch data: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
@@ -133,6 +135,7 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     res.status(500).json({ message: "An error occurred while fetching the properties." });
   }
 });
+
 
 
 // Fetch available lease properties
