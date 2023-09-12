@@ -136,8 +136,6 @@ app.get('/properties/residential/sale/available', async (req, res) => {
   }
 });
 
-
-
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
   try {
