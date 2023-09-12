@@ -99,6 +99,7 @@ app.get('/properties/residential/lease', async (req, res) => {
   }
 });
 
+
 // Fetch available sale properties
 app.get('/properties/residential/sale/available', async (req, res) => {
   try {
@@ -125,13 +126,14 @@ app.get('/properties/residential/sale/available', async (req, res) => {
       res.json(filteredData);
     } else {
       console.error("Unexpected data format from API:", data);
-      res.status(500).json({ message: "An error occurred while fetching the properties." });
+      res.status(500).json({ message: "An error occurred while processing the properties data." });
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "An error occurred while fetching the properties." });
+    console.error("Error fetching or processing data:", error);
+    res.status(500).json({ message: "An error occurred while fetching or processing the properties data." });
   }
 });
+
 
 
 // Fetch available lease properties
