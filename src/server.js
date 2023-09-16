@@ -119,10 +119,13 @@ app.get('/properties/residential/sale/available', async (req, res) => {
 
     const data = await response.json();
 
+    // Check if data.photos exists and is an array before mapping it
+    const photos = Array.isArray(data.photos) ? data.photos.map(photo => photo.url) : [];
+
     // Filter the data to include only the required fields
     const filteredData = {
       displayAddress: data.displayAddress,
-      photos: data.photos.map(photo => photo.url),
+      photos,
       bedrooms: data.bed,
       bathrooms: data.bath,
       propertyId: data.id,
