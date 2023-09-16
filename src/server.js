@@ -99,7 +99,7 @@ app.get('/properties/residential/lease', async (req, res) => {
   }
 });
 
-
+// Fetch available sale properties
 app.get('/properties/residential/sale/available', async (req, res) => {
   try {
     const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/sale/available`;
@@ -112,9 +112,10 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     
     const data = await response.json();
 
-    // Ensure that data.properties is an array
-    if (Array.isArray(data.properties)) {
-      const filteredData = data.properties.map(property => ({
+    // Check if the "photos" property exists in the response
+    if (data.photos && Array.isArray(data.photos)) {
+      // Filter and format the "photos" data
+      const filteredData = data.photos.map(property => ({
         id: property.id,
         displayAddress: property.displayAddress,
         bedrooms: property.bed,
@@ -125,6 +126,7 @@ app.get('/properties/residential/sale/available', async (req, res) => {
 
       res.json(filteredData);
     } else {
+      // Handle the case where "photos" data is missing or not an array
       res.status(500).json({ message: "An error occurred while fetching the properties." });
     }
   } catch (error) {
@@ -132,7 +134,6 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     res.status(500).json({ message: "An error occurred while fetching the properties." });
   }
 });
-
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
