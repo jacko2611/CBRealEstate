@@ -100,7 +100,6 @@ app.get('/properties/residential/lease', async (req, res) => {
 });
 
 
-// Fetch available sale properties
 app.get('/properties/residential/sale/available', async (req, res) => {
   try {
     const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/sale/available`;
@@ -110,27 +109,18 @@ app.get('/properties/residential/sale/available', async (req, res) => {
         "X-Api-Key": apiKey
       }
     });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`API request failed with status ${response.status}: ${errorText}`);
-      throw new Error(`Failed to fetch data: ${response.status} - ${errorText}`);
-    }
-
+    
     const data = await response.json();
 
-    // Check if data.photos exists and is an array before mapping it
-    const photos = Array.isArray(data.photos) ? data.photos.map(photo => photo.url) : [];
-
-    // Filter the data to include only the required fields
-    const filteredData = {
-      displayAddress: data.displayAddress,
-      photos,
-      bedrooms: data.bed,
-      bathrooms: data.bath,
-      propertyId: data.id,
-      description: data.description
-    };
+    // Filter and format the data
+    const filteredData = data.map(property => ({
+      id: property.id,
+      displayAddress: property.displayAddress,
+      bedrooms: property.bed,
+      bathrooms: property.bath,
+      description: property.description,
+      photos: property.photos.map(photo => photo.url)
+    }));
 
     res.json(filteredData);
   } catch (error) {
