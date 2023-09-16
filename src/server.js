@@ -111,33 +111,32 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     });
 
     if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
+      throw new Error(`API request failed with status: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
+
     if (!Array.isArray(data)) {
-      throw new Error("API response is not in the expected format.");
+      throw new Error("API response is not an array as expected.");
     }
 
     // Filter and format the data
     const filteredData = data.map(property => ({
       id: property.id,
       displayAddress: property.displayAddress,
-      bedrooms: property.bed,
-      bathrooms: property.bath,
-      description: property.description,
-      photos: property.photos.map(photo => photo.url)
+      bedrooms: property.bed || 0, // Handle missing or undefined values
+      bathrooms: property.bath || 0, // Handle missing or undefined values
+      description: property.description || "", // Handle missing or undefined values
+      photos: (property.photos || []).map(photo => photo.url)
     }));
 
     res.json(filteredData);
   } catch (error) {
     console.error(error);
-
-    // You can customize the error response to provide more details
-    res.status(500).json({ message: "An error occurred while fetching or processing the properties.", error: error.message });
+    res.status(500).json({ message: "An error occurred while fetching or processing the properties." });
   }
 });
+
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
