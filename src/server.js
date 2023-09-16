@@ -114,14 +114,19 @@ app.get('/properties/residential/sale/available', async (req, res) => {
       throw new Error(`API request failed with status: ${response.status}`);
     }
 
-    const data = await response.json();
+    const responseData = await response.json();
 
-    if (!Array.isArray(data)) {
-      throw new Error("API response is not an array as expected.");
+    // Check if responseData contains arrays with the data you need
+    if (!responseData || !responseData.propertyData || !Array.isArray(responseData.propertyData)) {
+      console.error("API Response does not contain expected data:", responseData);
+      throw new Error("API response is not in the expected format.");
     }
 
-    // Filter and format the data
-    const filteredData = data.map(property => ({
+    // Extract the propertyData array
+    const propertyData = responseData.propertyData;
+
+    // Filter and format the data from propertyData
+    const filteredData = propertyData.map(property => ({
       id: property.id,
       displayAddress: property.displayAddress,
       bedrooms: property.bed || 0, // Handle missing or undefined values
