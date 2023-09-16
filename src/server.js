@@ -99,6 +99,7 @@ app.get('/properties/residential/lease', async (req, res) => {
   }
 });
 
+// Fetch available sale properties and filter the data
 app.get('/properties/residential/sale/available', async (req, res) => {
   try {
     const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/sale/available`;
@@ -108,10 +109,16 @@ app.get('/properties/residential/sale/available', async (req, res) => {
         "X-Api-Key": apiKey
       }
     });
+
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
     
     const data = await response.json();
     
-    console.log("API Response:", data); // Log the API response
+    if (!Array.isArray(data)) {
+      throw new Error("API response is not in the expected format.");
+    }
 
     // Filter and format the data
     const filteredData = data.map(property => ({
@@ -126,10 +133,11 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     res.json(filteredData);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred while fetching the properties." });
+
+    // You can customize the error response to provide more details
+    res.status(500).json({ message: "An error occurred while fetching or processing the properties.", error: error.message });
   }
 });
-
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
