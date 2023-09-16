@@ -99,7 +99,6 @@ app.get('/properties/residential/lease', async (req, res) => {
   }
 });
 
-// Fetch available sale properties
 app.get('/properties/residential/sale/available', async (req, res) => {
   try {
     const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/sale/available`;
@@ -111,29 +110,26 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     });
     
     const data = await response.json();
+    
+    console.log("API Response:", data); // Log the API response
 
-    // Check if the "photos" property exists in the response
-    if (data.photos && Array.isArray(data.photos)) {
-      // Filter and format the "photos" data
-      const filteredData = data.photos.map(property => ({
-        id: property.id,
-        displayAddress: property.displayAddress,
-        bedrooms: property.bed,
-        bathrooms: property.bath,
-        description: property.description,
-        photos: property.photos.map(photo => photo.url)
-      }));
+    // Filter and format the data
+    const filteredData = data.map(property => ({
+      id: property.id,
+      displayAddress: property.displayAddress,
+      bedrooms: property.bed,
+      bathrooms: property.bath,
+      description: property.description,
+      photos: property.photos.map(photo => photo.url)
+    }));
 
-      res.json(filteredData);
-    } else {
-      // Handle the case where "photos" data is missing or not an array
-      res.status(500).json({ message: "An error occurred while fetching the properties." });
-    }
+    res.json(filteredData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred while fetching the properties." });
   }
 });
+
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
