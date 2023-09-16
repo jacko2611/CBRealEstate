@@ -112,22 +112,27 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     
     const data = await response.json();
 
-    // Filter and format the data
-    const filteredData = data.map(property => ({
-      id: property.id,
-      displayAddress: property.displayAddress,
-      bedrooms: property.bed,
-      bathrooms: property.bath,
-      description: property.description,
-      photos: property.photos.map(photo => photo.url)
-    }));
+    // Ensure that data.properties is an array
+    if (Array.isArray(data.properties)) {
+      const filteredData = data.properties.map(property => ({
+        id: property.id,
+        displayAddress: property.displayAddress,
+        bedrooms: property.bed,
+        bathrooms: property.bath,
+        description: property.description,
+        photos: property.photos.map(photo => photo.url)
+      }));
 
-    res.json(filteredData);
+      res.json(filteredData);
+    } else {
+      res.status(500).json({ message: "An error occurred while fetching the properties." });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred while fetching the properties." });
   }
 });
+
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
