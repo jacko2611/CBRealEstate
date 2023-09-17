@@ -116,11 +116,14 @@ app.get('/properties/residential/sale/available', async (req, res) => {
 
     const responseData = await response.json();
 
-    // Extract the propertyData array directly
-    const propertyData = responseData;
+    // Check if responseData is an array
+    if (!Array.isArray(responseData)) {
+      console.error("API Response does not contain expected data:", responseData);
+      return res.status(500).json({ message: "API response is not in the expected format." });
+    }
 
-    // Filter and format the data from propertyData
-    const filteredData = propertyData.map(property => ({
+    // Filter and format the data from responseData
+    const filteredData = responseData.map(property => ({
       id: property.id,
       displayAddress: property.displayAddress || "",
       bedrooms: property.bed || 0, // Handle missing or undefined values
