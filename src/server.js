@@ -109,12 +109,27 @@ app.get('/properties/residential/sale/available', async (req, res) => {
         "X-Api-Key": apiKey
       }
     });
-  const data = await response.json();
-  res.json(data);
-} catch (error) {
-  console.error(error);
-  res.status(500).json({ message: "An error occurred while fetching the properties." });
-}
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch data from the external API');
+    }
+
+    const data = await response.json();
+
+    // Extract photo URLs and format them as a comma-separated string
+    const photoUrls = data.photos.map(photo => photo.url).join(',');
+
+    // Create a new object with the formatted photo URLs
+    const responseData = {
+      ...data, // Include the original data
+      photos: photoUrls // Replace the 'photos' property with the formatted string
+    };
+
+    res.json(responseData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while fetching the properties." });
+  }
 });
 
 
