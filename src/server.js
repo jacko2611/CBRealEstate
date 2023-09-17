@@ -122,15 +122,20 @@ app.get('/properties/residential/sale/available', async (req, res) => {
       return res.status(500).json({ message: "API response is not in the expected format." });
     }
 
-    // Filter and format the data
-    const filteredData = responseData.map(listing => ({
-      id: listing.id,
-      displayAddress: listing.displayAddress || "",
-      bedrooms: listing.bed || 0, // Handle missing or undefined values
-      bathrooms: listing.bath || 0, // Handle missing or undefined values
-      description: listing.description || "", // Handle missing or undefined values
-      photos: (listing.photos || []).map(photo => photo.url)
-    }));
+    // Define a function to extract and format data from a listing
+    const formatListing = (listing) => {
+      return {
+        id: listing.id,
+        displayAddress: listing.displayAddress || "",
+        bedrooms: listing.bed || 0, // Handle missing or undefined values
+        bathrooms: listing.bath || 0, // Handle missing or undefined values
+        description: listing.description || "", // Handle missing or undefined values
+        photos: (listing.photos || []).map(photo => photo.url)
+      };
+    };
+
+    // Map and format the data
+    const filteredData = responseData.map(formatListing);
 
     res.json(filteredData);
   } catch (error) {
@@ -138,7 +143,6 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     res.status(500).json({ message: "An error occurred while fetching or processing the properties." });
   }
 });
-
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
