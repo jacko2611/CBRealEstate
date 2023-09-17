@@ -109,7 +109,7 @@ app.get('/properties/residential/sale/available', async (req, res) => {
         "X-Api-Key": apiKey
       }
     });
-  const data = await reponse.json();
+  const data = await response.json();
   res.json(data);
 } catch (error) {
   console.error(error);
@@ -122,13 +122,13 @@ app.get('/properties/residential/sale/available', async (req, res) => {
 app.get('/properties/residential/lease/available', async (req, res) => {
   try {
     const propertyEndpoint = `${baseUrl}/v1.2/properties/residential/lease/available`;
-    const reponse = await fetch(propertyEndpoint, {
+    const response = await fetch(propertyEndpoint, {
       headers: {
         "Authorization": `Bearer ${apiToken}`,
         "X-Api-Key": apiKey
       }
     });
-    const data = await reponse.json();
+    const data = await response.json();
     res.json(data);
   } catch (error) {
     console.error(error);
