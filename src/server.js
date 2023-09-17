@@ -116,19 +116,16 @@ app.get('/properties/residential/sale/available', async (req, res) => {
 
     const responseData = await response.json();
 
-    // Check if the response data is an array
-    if (!Array.isArray(responseData)) {
-      console.error("API Response is not in the expected format:", responseData);
-      return res.status(500).json({ message: "API response is not in the expected format." });
-    }
+    // Extract the propertyData array directly
+    const propertyData = responseData;
 
-    // Filter and format the data from the response
-    const filteredData = responseData.map(property => ({
+    // Filter and format the data from propertyData
+    const filteredData = propertyData.map(property => ({
       id: property.id,
       displayAddress: property.displayAddress || "",
-      bedrooms: property.bed || 0,
-      bathrooms: property.bath || 0,
-      description: property.description || "",
+      bedrooms: property.bed || 0, // Handle missing or undefined values
+      bathrooms: property.bath || 0, // Handle missing or undefined values
+      description: property.description || "", // Handle missing or undefined values
       photos: (property.photos || []).map(photo => photo.url)
     }));
 
@@ -138,7 +135,6 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     res.status(500).json({ message: "An error occurred while fetching or processing the properties." });
   }
 });
-
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
