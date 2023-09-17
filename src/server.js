@@ -116,17 +116,17 @@ app.get('/properties/residential/sale/available', async (req, res) => {
 
     const responseData = await response.json();
 
+    // Log the actual response to inspect its structure
+    console.log("API Response:", responseData);
+
     // Check if responseData contains arrays with the data you need
-    if (!responseData || !responseData.propertyData || !Array.isArray(responseData.propertyData)) {
+    if (!responseData || !Array.isArray(responseData)) {
       console.error("API Response does not contain expected data:", responseData);
       return res.status(500).json({ message: "API response is not in the expected format." });
     }
 
-    // Extract the propertyData array
-    const propertyData = responseData.propertyData;
-
-    // Filter and format the data from propertyData
-    const filteredData = propertyData.map(property => ({
+    // Extract and filter the data from responseData based on its actual structure
+    const filteredData = responseData.map(property => ({
       id: property.id,
       displayAddress: property.displayAddress || "",
       bedrooms: property.bed || 0, // Handle missing or undefined values
@@ -141,7 +141,6 @@ app.get('/properties/residential/sale/available', async (req, res) => {
     res.status(500).json({ message: "An error occurred while fetching or processing the properties." });
   }
 });
-
 
 // Fetch available lease properties
 app.get('/properties/residential/lease/available', async (req, res) => {
